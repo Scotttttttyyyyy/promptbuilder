@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +6,11 @@
   <title>AI Prompt Builder Hub</title>
   <style>
     body {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 11pt;
-      margin: 40px;
-      background-color: #f8f9fa;
-    }
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11pt;
+  margin: 40px;
+  background-color: #f8f9fa;
+}
     h1 {
       color: #2c3e50;
     }
@@ -20,22 +19,22 @@
       margin: 15px 0 5px;
     }
     input, textarea, select, button {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 11pt;
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11pt;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
     #output {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 11pt;
-      background: #ecf0f1;
-      padding: 20px;
-      border-radius: 8px;
-      white-space: pre-wrap;
-    }
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11pt;
+  background: #ecf0f1;
+  padding: 20px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
   </style>
 </head>
 <body>
@@ -47,23 +46,30 @@
     <option value="kahoot">Kahoot Quiz</option>
   </select>
 
+  <!-- Lesson Plan Form -->
   <div id="lessonForm">
     <label for="subject">Learning Area</label>
     <input type="text" id="subject" placeholder="e.g. Humanities">
+
     <label for="year">Year Level</label>
     <input type="text" id="year" placeholder="e.g. Year 9">
+
     <label for="topic">Topic</label>
     <input type="text" id="topic" placeholder="e.g. Industrial Revolution">
+
     <label for="goal">Learning Intention</label>
     <textarea id="goal" placeholder="e.g. Students should understand the impact of industrialisation on society."></textarea>
+
     <label for="duration">Duration of Each Lesson (minutes)</label>
     <input type="number" id="duration" placeholder="e.g. 60">
+
     <label for="numLessons">How Many Lessons?</label>
     <select id="numLessons">
       <option value="1">1 Lesson</option>
       <option value="1w">1 Week</option>
       <option value="6w">6 Weeks</option>
     </select>
+
     <label for="lessonsPerWeek">Lessons Per Week</label>
     <select id="lessonsPerWeek">
       <option value="1">1</option>
@@ -71,31 +77,40 @@
       <option value="3">3</option>
       <option value="4">4</option>
     </select>
-    <label>Include in Plan:</label>
-    <input type="checkbox" id="starter"> Tuning In<br>
-    <input type="checkbox" id="differentiation"> Differentiation Strategies<br>
-    <input type="checkbox" id="assessment"> Assessment Ideas<br>
-    <input type="checkbox" id="groupwork"> Group Work<br>
-    <input type="checkbox" id="technology"> Use of Digital Technologies<br>
-    <label for="format">Preferred Format</label>
+
+    <div style="margin-bottom: 20px;">
+  <label>Include in Plan:</label>
+  <div style="display: flex; align-items: center; margin-bottom: 5px;"><input type="checkbox" id="starter" style="margin-right: 10px;"> <span>Tuning In</span></div>
+  <div style="display: flex; align-items: center; margin-bottom: 5px;"><input type="checkbox" id="differentiation" style="margin-right: 10px;"> <span>Differentiation Strategies</span></div>
+  <div style="display: flex; align-items: center; margin-bottom: 5px;"><input type="checkbox" id="assessment" style="margin-right: 10px;"> <span>Assessment Ideas</span></div>
+  <div style="display: flex; align-items: center; margin-bottom: 5px;"><input type="checkbox" id="groupwork" style="margin-right: 10px;"> <span>Group Work</span></div>
+  <div style="display: flex; align-items: center; margin-bottom: 5px;"><input type="checkbox" id="technology" style="margin-right: 10px;"> <span>Use of Digital Technologies</span></div>
+</div>
+<label for="format">Preferred Format</label>
     <select id="format">
       <option value="paragraph">Paragraph</option>
       <option value="dot points">Dot Points</option>
       <option value="table">Table</option>
     </select>
+
     <label for="abilities">Student Ability Range (optional)</label>
     <input type="text" id="abilities" placeholder="e.g. Mixed-ability class with some EAL/D students">
   </div>
 
+  <!-- Kahoot Form -->
   <div id="kahootForm" style="display: none;">
     <label for="kahootClass">Learning Area</label>
     <input type="text" id="kahootClass" placeholder="e.g. Science">
+
     <label for="kahootYear">Year Level</label>
     <input type="text" id="kahootYear" placeholder="e.g. Year 8">
+
     <label for="kahootTopic">Topic</label>
     <input type="text" id="kahootTopic" placeholder="e.g. States of Matter">
+
     <label for="kahootNum">Number of Questions</label>
     <input type="number" id="kahootNum" placeholder="e.g. 10">
+
     <label for="kahootDifficulty">Difficulty Level</label>
     <select id="kahootDifficulty">
       <option value="easy">Easy</option>
@@ -105,6 +120,7 @@
   </div>
 
   <button onclick="generatePrompt()">Generate Prompt</button>
+
   <h2>AI Prompt:</h2>
   <div id="output"></div>
 
@@ -162,14 +178,7 @@
         const prompt = `Create a ${kDiff}-level Kahoot quiz with ${kNum} questions for a ${kYear} ${kClass} class on the topic: "${kTopic}". Provide the questions in a table format like:
 Question - max 120 characters | Answer 1 - max 75 | Answer 2 - max 75 | Answer 3 - max 75 | Answer 4 - max 75 | Time limit (5-240 secs) | Correct answer(s) (1,2,3,4). Use Australian spelling and align with Western Australian curriculum conventions.
 
-To help format your questions for uploading to Kahoot, you can use the Excel Template below.
-
-Instructions: 
-1. Download and open the Excel file.
-2. Copy the questions and answers into the corresponding columns.
-3. Save as .xlsx and go to kahoot.com → Create → Import Spreadsheet.
-4. Upload the file and review questions.
-5. Click 'Create' to finish your Kahoot.`;
+``;
         document.getElementById('output').textContent = prompt;
       }
     }
