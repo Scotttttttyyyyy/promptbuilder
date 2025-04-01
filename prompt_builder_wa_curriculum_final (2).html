@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Prompt Builder Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    #output {
+      background: #ecf0f1;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Prompt Builder for Teachers</h1>
+
+  <label for="mode">Choose a Prompt Type</label>
+  <select id="mode" onchange="toggleForms()">
+    <option value="lesson">Lesson Plan</option>
+    <option value="kahoot">Kahoot Quiz</option>
+  </select>
+
+  <div id="lessonForm">
+    <label for="subject">Learning Area</label>
+    <input type="text" id="subject" placeholder="e.g. Humanities">
+    <label for="year">Year Level</label>
+    <input type="text" id="year" placeholder="e.g. Year 9">
+    <label for="topic">Topic</label>
+    <input type="text" id="topic" placeholder="e.g. Industrial Revolution">
+    <label for="goal">Learning Intention</label>
+    <textarea id="goal" placeholder="e.g. Students should understand the impact of industrialisation on society."></textarea>
+    <label for="duration">Duration of Each Lesson (minutes)</label>
+    <input type="number" id="duration" placeholder="e.g. 60">
+    <label for="numLessons">How Many Lessons?</label>
+    <select id="numLessons">
+      <option value="1">1 Lesson</option>
+      <option value="1w">1 Week</option>
+      <option value="6w">6 Weeks</option>
+    </select>
+    <label for="lessonsPerWeek">Lessons Per Week</label>
+    <select id="lessonsPerWeek">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+    <label>Include in Plan:</label>
+    <input type="checkbox" id="starter"> Tuning In<br>
+    <input type="checkbox" id="differentiation"> Differentiation Strategies<br>
+    <input type="checkbox" id="assessment"> Assessment Ideas<br>
+    <input type="checkbox" id="groupwork"> Group Work<br>
+    <input type="checkbox" id="technology"> Use of Digital Technologies<br>
+    <label for="format">Preferred Format</label>
+    <select id="format">
+      <option value="paragraph">Paragraph</option>
+      <option value="dot points">Dot Points</option>
+      <option value="table">Table</option>
+    </select>
+    <label for="abilities">Student Ability Range (optional)</label>
+    <input type="text" id="abilities" placeholder="e.g. Mixed-ability class with some EAL/D students">
+  </div>
+
+  <div id="kahootForm" style="display: none;">
+    <label for="kahootClass">Learning Area</label>
+    <input type="text" id="kahootClass" placeholder="e.g. Science">
+    <label for="kahootYear">Year Level</label>
+    <input type="text" id="kahootYear" placeholder="e.g. Year 8">
+    <label for="kahootTopic">Topic</label>
+    <input type="text" id="kahootTopic" placeholder="e.g. States of Matter">
+    <label for="kahootNum">Number of Questions</label>
+    <input type="number" id="kahootNum" placeholder="e.g. 10">
+    <label for="kahootDifficulty">Difficulty Level</label>
+    <select id="kahootDifficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Challenging</option>
+    </select>
+  </div>
+
+  <button onclick="generatePrompt()">Generate Prompt</button>
+  <h2>AI Prompt:</h2>
+  <div id="output"></div>
+
+  <script>
+    function toggleForms() {
+      const mode = document.getElementById('mode').value;
+      document.getElementById('lessonForm').style.display = mode === 'lesson' ? 'block' : 'none';
+      document.getElementById('kahootForm').style.display = mode === 'kahoot' ? 'block' : 'none';
+    }
+
+    function generatePrompt() {
+      const mode = document.getElementById('mode').value;
+
+      if (mode === 'lesson') {
+        const subject = document.getElementById('subject').value;
+        const year = document.getElementById('year').value;
+        const topic = document.getElementById('topic').value;
+        const goal = document.getElementById('goal').value;
+        const duration = document.getElementById('duration').value;
+        const numLessons = document.getElementById('numLessons').value;
+        const lessonsPerWeek = document.getElementById('lessonsPerWeek').value;
+        const format = document.getElementById('format').value;
+        const abilities = document.getElementById('abilities').value;
+
+        const include = [];
+        if (document.getElementById('starter').checked) include.push("tuning in activity");
+        if (document.getElementById('differentiation').checked) include.push("differentiation strategies");
+        if (document.getElementById('assessment').checked) include.push("assessment ideas");
+        if (document.getElementById('groupwork').checked) include.push("group work");
+        if (document.getElementById('technology').checked) include.push("use of digital technologies");
+
+        let lessonPlanDetail = "";
+        if (numLessons === "1") {
+          lessonPlanDetail = `Create a single ${duration}-minute lesson.`;
+        } else if (numLessons === "1w") {
+          lessonPlanDetail = `Create a 1-week sequence of ${lessonsPerWeek} lessons, each ${duration} minutes long.`;
+        } else if (numLessons === "6w") {
+          lessonPlanDetail = `Create a 6-week unit plan with ${lessonsPerWeek} lessons per week, each ${duration} minutes.`;
+        }
+
+        const activityList = include.length > 0 ? ` Include the following elements: ${include.join(", ")}.` : "";
+        const abilityDetail = abilities ? ` The class includes: ${abilities}.` : "";
+
+        const prompt = `Design a lesson plan for a ${year} ${subject} class on the topic "${topic}". The learning intention is: ${goal}. ${lessonPlanDetail}${activityList}${abilityDetail} Present the plan in a ${format} format. Use Australian English and align with Western Australian curriculum conventions.`;
+        document.getElementById('output').textContent = prompt;
+      }
+
+      if (mode === 'kahoot') {
+        const kClass = document.getElementById('kahootClass').value;
+        const kYear = document.getElementById('kahootYear').value;
+        const kTopic = document.getElementById('kahootTopic').value;
+        const kNum = document.getElementById('kahootNum').value;
+        const kDiff = document.getElementById('kahootDifficulty').value;
+
+        const prompt = `Create a ${kDiff}-level Kahoot quiz with ${kNum} questions for a ${kYear} ${kClass} class on the topic: "${kTopic}". Provide the questions in a table format like:
+Question - max 120 characters | Answer 1 - max 75 | Answer 2 - max 75 | Answer 3 - max 75 | Answer 4 - max 75 | Time limit (5-240 secs) | Correct answer(s) (1,2,3,4). Use Australian spelling and align with Western Australian curriculum conventions.
+
+To help format your questions for uploading to Kahoot, you can use this Excel template: https://chat.openai.com/sandbox/file/XYfJkSxZFJTcj1fjq2wzig
+
+Instructions: 
+1. Download and open the Excel file.
+2. Copy the questions and answers into the corresponding columns.
+3. Save as .xlsx and go to kahoot.com → Create → Import Spreadsheet.
+4. Upload the file and review questions.
+5. Click 'Create' to finish your Kahoot.`;
+        document.getElementById('output').textContent = prompt;
+      }
+    }
+  </script>
+</body>
+</html>
